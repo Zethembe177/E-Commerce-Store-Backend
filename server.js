@@ -7,7 +7,7 @@ const app = express();
 const PORT = 5000;
 app.use(cors());
 app.use(express.json());
-// Example route: fetch all products
+//  route: fetch all products
 app.get("/api/products", async (req, res) => {
   try {
     const response = await fetch("https://fakestoreapi.com/products");
@@ -19,8 +19,20 @@ app.get("/api/products", async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 });
+// route: fetch products by category
+app.get("/api/products/category/:category", async (req, res) => {
+  try {
+    const { category } = req.params;
+    const response = await fetch(`https://fakestoreapi.com/products/category/${category}`);
+    if (!response.ok) throw new Error("Failed to fetch products by category");
+const data = await response.json();
+    res.json(data);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
 
-// Example route: fetch single product
+//  route: fetch single product
 app.get("/api/products/:id", async (req, res) => {
   try {
     const { id } = req.params;
@@ -35,3 +47,4 @@ app.get("/api/products/:id", async (req, res) => {
 });
 
 app.listen(PORT, () => console.log(`Server running on http://localhost:${PORT}`));
+
